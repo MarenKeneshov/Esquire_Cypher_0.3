@@ -9,6 +9,8 @@
 
 Программа предоставляет удобный интерфейс для работы с файлами и ключами шифрования. Не используйте программу для незаконных целей.
 
+ДЕМО-ВИДЕО ЕСТЬ В МОЁМ ТГ-КАНАЛЕ: t.me/kensecproj
+
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ### Esquire Cypher 0.3
 
@@ -20,3 +22,5 @@
 - Support for arbitrary files and encryption keys.
 
 The program provides an easy-to-use interface for working with files and encryption keys. Do not use the program for illegal purposes.
+
+THERE IS A DEMO VIDEO IN MY TG-CHANNEL: t.me/kensecproj
