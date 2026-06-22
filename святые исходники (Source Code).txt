@@ -4,26 +4,21 @@
 #include <string>
 
 // Пососи мне, ревёрсер хуев
-// Youtube: Maren 704
 HWND hMainWnd, hEncryptBtn, hDecryptBtn, hKeyEdit, hKeyLabel, hCoderLabel, hEncryptLabel;
 wchar_t filename[MAX_PATH];
 std::wstring encryptionKey;
 
-void XORFile(const wchar_t* filename, const std::wstring& key, bool encrypt)
-{
+void XORFile(const wchar_t* filename, const std::wstring& key, bool encrypt) {
     std::ifstream fileIn(filename, std::ios::binary);
     if (!fileIn) return;
 
     std::wstring outputFilename = filename;
-    if (encrypt)
-	{
+    if (encrypt) {
         outputFilename += L".esquire";
     }
-    else
-	{
+    else {
         size_t pos = outputFilename.rfind(L".esquire");
-        if (pos != std::wstring::npos)
-		{
+        if (pos != std::wstring::npos) {
             outputFilename = outputFilename.substr(0, pos);
         }
     }
@@ -32,8 +27,7 @@ void XORFile(const wchar_t* filename, const std::wstring& key, bool encrypt)
     char buffer;
     size_t keyLen = key.length();
 
-    for (size_t i = 0; fileIn.read(&buffer, 1); i++)
-	{
+    for (size_t i = 0; fileIn.read(&buffer, 1); i++) {
         buffer ^= key[i % keyLen]; // XOR с ключом (он его спиздил у меня)
         fileOut.write(&buffer, 1);
     }
@@ -42,8 +36,7 @@ void XORFile(const wchar_t* filename, const std::wstring& key, bool encrypt)
     fileOut.close();
 }
 
-void SelectFile(HWND hwnd)
-{
+void SelectFile(HWND hwnd) {
     OPENFILENAMEW ofn;
     ZeroMemory(&ofn, sizeof(ofn));
     ofn.lStructSize = sizeof(ofn);
@@ -55,16 +48,13 @@ void SelectFile(HWND hwnd)
     ofn.nFilterIndex = 1;
     ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
 
-    if (GetOpenFileNameW(&ofn) == TRUE)
-	{
+    if (GetOpenFileNameW(&ofn) == TRUE) {
         // Успешно выбран файл (нет, блять, провально)
     }
 }
 
-LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
-{
-    switch (msg)
-	{
+LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+    switch (msg) {
     case WM_CREATE:
         hKeyLabel = CreateWindowW(L"STATIC", L"Key:", WS_VISIBLE | WS_CHILD, 20, 20, 30, 25, hwnd, NULL, NULL, NULL);
         hKeyEdit = CreateWindowW(L"EDIT", L"", WS_VISIBLE | WS_CHILD | WS_BORDER, 60, 20, 180, 25, hwnd, (HMENU)1, NULL, NULL);
@@ -72,19 +62,18 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
         hEncryptBtn = CreateWindowW(L"BUTTON", L"Encrypt", WS_VISIBLE | WS_CHILD, 20, 50, 80, 25, hwnd, (HMENU)2, NULL, NULL);
         hDecryptBtn = CreateWindowW(L"BUTTON", L"Decrypt", WS_VISIBLE | WS_CHILD, 120, 50, 80, 25, hwnd, (HMENU)3, NULL, NULL);
 
-        hCoderLabel = CreateWindowW(L"STATIC", L"Coder: Keneshov Maren / KenSec Proj. / YT: Maren 704", WS_VISIBLE | WS_CHILD, 20, 90, 200, 35, hwnd, NULL, NULL, NULL);
+        hCoderLabel = CreateWindowW(L"STATIC", L"Coder: Keneshov Maren / KenSec Proj. / YT: Maren 704", WS_VISIBLE | WS_CHILD, 20, 90, 250, 40, hwnd, NULL, NULL, NULL);
         break;
     case WM_COMMAND:
-        switch (LOWORD(wParam))
-		{
-        case 2: // ёбаная Encrypt-кнопка
+        switch (LOWORD(wParam)) {
+        case 2: // Encrypt-кнопка
             GetWindowTextW(hKeyEdit, filename, sizeof(filename) / sizeof(filename[0]));
             encryptionKey = filename;
             SelectFile(hwnd);
             XORFile(filename, encryptionKey, true);
             MessageBoxW(hwnd, L"File encrypted.", L"Success", MB_OK);
             break;
-        case 3: // не менее ёбаная Decrypt-кнопка
+        case 3: // Decrypt-кнопка
             GetWindowTextW(hKeyEdit, filename, sizeof(filename) / sizeof(filename[0]));
             encryptionKey = filename;
             SelectFile(hwnd);
@@ -102,8 +91,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
     return 0;
 }
 
-int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow)
-{
+int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow) {
     WNDCLASSEXW wc;
     MSG Msg;
 
@@ -120,8 +108,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
     wc.lpszClassName = L"MainWindowClass";
     wc.hIconSm = LoadIcon(NULL, IDI_APPLICATION);
 
-    if (!RegisterClassExW(&wc))
-	{
+    if (!RegisterClassExW(&wc)) {
         MessageBoxW(NULL, L"Window Registration Failed!", L"Error!", MB_ICONEXCLAMATION | MB_OK);
         return 0;
     }
@@ -131,11 +118,10 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
         L"MainWindowClass",
         L"Esquire Cypher 0.3",
         WS_OVERLAPPEDWINDOW,
-        CW_USEDEFAULT, CW_USEDEFAULT, 270, 200,
+        CW_USEDEFAULT, CW_USEDEFAULT, 400, 220,
         NULL, NULL, hInstance, NULL);
 
-    if (hMainWnd == NULL)
-	{
+    if (hMainWnd == NULL) {
         MessageBoxW(NULL, L"Window Creation Failed!", L"Error!", MB_ICONEXCLAMATION | MB_OK);
         return 0;
     }
@@ -143,8 +129,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
     ShowWindow(hMainWnd, nCmdShow);
     UpdateWindow(hMainWnd);
 
-    while (GetMessage(&Msg, NULL, 0, 0) > 0)
-	{
+    while (GetMessage(&Msg, NULL, 0, 0) > 0) {
         TranslateMessage(&Msg);
         DispatchMessage(&Msg);
     }
